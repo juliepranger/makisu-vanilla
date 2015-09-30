@@ -3,24 +3,24 @@ define(function (require, exports, module) {
   function Makisu() {
 
     // Global initialization flag
-    var initialized = false;
+    this.initialized = false;
 
     // For detecting browser prefix and capabilities
-    var element = document.createElement('div');
-    var vendors = 'moz ms o webkit'.split(' ');
-    var toupper = function(str) { return str.toUpperCase(); };
+    this.element = document.createElement('div');
+    this.vendors = 'moz ms o webkit'.split(' ');
+    this.toupper = function(str) { return str.toUpperCase(); };
 
     // Establish vendor prefix and CSS 3D support
-    var vendor;
+    this.vendor;
 
-    for (var prop, i = 0; i < vendors.length; i++) {
+    for (var prop, i = 0; i < this.vendors.length; i++) {
 
-      prop = (vendor = vendors[i]) + 'Perspective';
-      if(prop in element.style || prop.replace(/^(\w)/, toupper) in element.style) break;
+      prop = (this.vendor = this.vendors[i]) + 'Perspective';
+      if(prop in this.element.style || prop.replace(/^(\w)/, this.toupper) in this.element.style) break;
     }
 
-    var canRun = !!vendor;
-    var prefix = '-' + vendor + '-';
+    this.canRun = !!this.vendor;
+    var prefix = '-' + this.vendor + '-';
 
     var ctrl, root, base, kids, node, item, over, back, wait, anim, last;
 
@@ -178,9 +178,37 @@ define(function (require, exports, module) {
         utils.inject(anim + '}'); 
       }
     };
-  }
+
+    // Element templates
+    var markup = {
+      node: '<span class="node"/>',
+      back: '<span class="face back"/>',
+      over: '<span class="face over"/>'
+    }
+  };
 
   Makisu.prototype.constructor = Makisu;
+
+  Makisu.prototype.newMakisu = function(options) {
+
+    // Notify if 3D isn't available
+    if(!this.canRun) {
+      var message = 'Failed to detect CSS 3D support';
+
+      if(console && console.warn) {
+
+        // Print warning to the console
+        console.warn(message);
+
+        // Trigger errors on elements
+        Array.prototype.forEach.call(this, function(el, index) {
+          var event = document.createEvent('HTMLEvents');
+          event.initEvent('click', true, false);
+          this.dispatchEvent(event);
+        }.bind(this);
+      }
+    }
+  };
 
   module.exports = new Makisu();
 
