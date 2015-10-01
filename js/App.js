@@ -7,14 +7,13 @@ define(function(require, exports, module) {
    */
   var App = function() {
 
-    console.log('things are happening');
-    var developers = document.getElementsByClassName('developers')[0];
+    console.log('App init');
     var prodPartners = document.getElementsByClassName('prod-partners')[0];
     var designers = document.getElementsByClassName('designers')[0];
 
-    console.log(developers);
-    console.log(prodPartners);
-    console.log(designers);
+    
+    // console.log(prodPartners);
+    // console.log(designers);
 
 
 
